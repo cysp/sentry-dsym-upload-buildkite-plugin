@@ -35,6 +35,11 @@ if [[ -z "${PROJECT-}" ]]; then
 	exit 1
 fi
 
+SENTRY_CLI_INFO_PLIST=""
+if [[ ! -z "${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_INFO_PLIST-}" ]]; then
+	SENTRY_CLI_INFO_PLIST="--info-plist "${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_INFO_PLIST}""
+fi
+
 if [[ -z "${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PATH-}" ]]; then
 	echo '[!] .dSYM path required'
 	exit 1
@@ -45,6 +50,7 @@ sentry-cli \
 	upload-dsym \
 	--org "${ORG}" \
 	--project "${PROJECT}" \
+	${SENTRY_CLI_INFO_PLIST} \
 	-- \
 	${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PATH}
 

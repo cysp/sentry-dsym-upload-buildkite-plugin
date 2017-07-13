@@ -13,6 +13,7 @@ steps:
       SENTRY_PROJECT: project
     plugins:
       sentry-dsym-upload:
+        info-plist: .ci-artifacts/Xyzzy.xcarchive/Products/Applications/Xyzzy.app/Info.plist
         path: .ci-artifacts/Xyzzy.app.dSYM
 ```
 
@@ -51,6 +52,10 @@ Specifies the Sentry project slug
 Specifies the environment variable containing the Sentry project slug
 
 Default: `SENTRY_PROJECT`
+
+### `info-plist` (optional)
+
+Specifies the path to the Info.plist to allow Sentry to associate the symbols with a build
 
 ### `path`
 
