@@ -1,0 +1,56 @@
+#!/bin/bash
+
+if [[ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]]; then
+	echo '[!] Build failed, skipping Sentry dSYM upload'
+	exit 0
+fi
+
+BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM:-SENTRY_AUTH_TOKEN}
+AUTH_TOKEN=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN-}
+if [[ -z "${AUTH_TOKEN}" ]]; then
+	AUTH_TOKEN=$(eval "echo \$$BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM")
+fi
+if [[ -z "${AUTH_TOKEN-}" ]]; then
+	echo '[!] Sentry authentication token required'
+	exit 1
+fi
+
+BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_ORG_FROM=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_ORG_FROM:-SENTRY_ORG}
+ORG=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_ORG-}
+if [[ -z "${ORG}" ]]; then
+	ORG=$(eval "echo \$$BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_ORG_FROM")
+fi
+if [[ -z "${ORG-}" ]]; then
+	echo '[!] Sentry organization required'
+	exit 1
+fi
+
+BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PROJECT_FROM=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PROJECT_FROM:-SENTRY_PROJECT}
+PROJECT=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PROJECT-}
+if [[ -z "${PROJECT}" ]]; then
+	PROJECT=$(eval "echo \$$BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PROJECT_FROM")
+fi
+if [[ -z "${PROJECT-}" ]]; then
+	echo '[!] Sentry project required'
+	exit 1
+fi
+
+if [[ -z "${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PATH-}" ]]; then
+	echo '[!] .dSYM path required'
+	exit 1
+fi
+
+sentry-cli \
+	--auth-token "${AUTH_TOKEN}" \
+	upload-dsym \
+	--org "${ORG}" \
+	--project "${PROJECT}" \
+	-- \
+	${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PATH}
+
+if [[ "$?" -ne 0 ]]; then
+    echo '[!] Sentry dSYM upload failed'
+    exit 1
+fi
+
+exit 0

@@ -1,0 +1,9 @@
+{
+    "name": "Sentry.io dSYM Upload",
+    "description": "Upload iOS app symbols to Sentry",
+    "author": "@cysp",
+    "public": true,
+    "requirements": [
+        "bash", "sentry-cli"
+    ]
+}
