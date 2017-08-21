@@ -5,12 +5,7 @@ if [[ "$BUILDKITE_COMMAND_EXIT_STATUS" -ne 0 ]]; then
 	exit 0
 fi
 
-BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM:-SENTRY_AUTH_TOKEN}
-AUTH_TOKEN=${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN-}
-if [[ -z "${AUTH_TOKEN}" ]]; then
-	AUTH_TOKEN=$(eval "echo \$$BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_AUTH_TOKEN_FROM")
-fi
-if [[ -z "${AUTH_TOKEN-}" ]]; then
+if [[ -z "${SENTRY_AUTH_TOKEN-}" ]]; then
 	echo '[!] Sentry authentication token required'
 	exit 1
 fi
@@ -46,7 +41,6 @@ if [[ -z "${BUILDKITE_PLUGIN_SENTRY_DSYM_UPLOAD_PATH-}" ]]; then
 fi
 
 sentry-cli \
-	--auth-token "${AUTH_TOKEN}" \
 	upload-dsym \
 	--org "${ORG}" \
 	--project "${PROJECT}" \

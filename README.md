@@ -17,21 +17,13 @@ steps:
         path: .ci-artifacts/Xyzzy.app.dSYM
 ```
 
-## Configuring
+## Environment Variables
 
 ### `SENTRY_AUTH_TOKEN`
 
-## Options
-
-### `auth-token`
-
 Specifies the Sentry authentication token
 
-### `auth-token-from`
-
-Specifies the environment variable containing the Sentry authentication token
-
-Default: `SENTRY_AUTH_TOKEN`
+## Options
 
 ### `org`
 
