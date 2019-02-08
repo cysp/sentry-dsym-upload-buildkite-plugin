@@ -12,9 +12,9 @@ steps:
       SENTRY_ORG: organization
       SENTRY_PROJECT: project
     plugins:
-      sentry-dsym-upload:
-        info-plist: .ci-artifacts/Xyzzy.xcarchive/Products/Applications/Xyzzy.app/Info.plist
-        path: .ci-artifacts/Xyzzy.app.dSYM
+      - sentry-dsym-upload:
+          info-plist: .ci-artifacts/Xyzzy.xcarchive/Products/Applications/Xyzzy.app/Info.plist
+          path: .ci-artifacts/Xyzzy.app.dSYM
 ```
 
 ## Environment Variables
